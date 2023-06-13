@@ -1,7 +1,9 @@
-import React from "react";
+import Form from "./components/Form";
 
-function App() {
-  return <div className="App">App</div>;
+export default function App() {
+  return (
+    <main className={"w-screen h-screen bg-cover center bg-light"}>
+      <Form />
+    </main>
+  );
 }
-
-export default App;
