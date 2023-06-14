@@ -3,9 +3,26 @@ import { formButtons } from "../utils";
 import { useState } from "react";
 import Input from "./Input";
 import Button from "./Button";
+import { useForm } from "react-hook-form";
+import { FormDataType, formSchema } from "../utils/form-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function Form() {
   const [type, setType] = useState<"login" | "signup">("login");
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FormDataType>({
+    resolver: zodResolver(formSchema),
+  });
+
+  const submitData = (data: FormDataType) => {
+    alert(JSON.stringify(data, null, 2));
+    reset();
+  };
 
   return (
     <article
@@ -29,14 +46,29 @@ export default function Form() {
           </button>
         ))}
       </div>
-      <form className="p-4 md:p-8 space-y-4 md:space-y-6">
-        <Input label="Email" type="email" placeholder="example@gmail.com" />
+      <form
+        className="p-4 md:p-8 space-y-4 md:space-y-6"
+        onSubmit={handleSubmit(submitData)}
+      >
         <Input
+          name="email"
+          label="Email"
+          type="email"
+          placeholder="example@gmail.com"
+          error={errors.email}
+          register={register}
+        />
+        <Input
+          name="password"
           label="Password"
           type="password"
           placeholder="example@gmail.com"
+          error={errors.password}
+          register={register}
         />
-        <Button>{formButtons.find((btn) => btn.type === type)?.title}</Button>
+        <Button type="submit">
+          {formButtons.find((btn) => btn.type === type)?.title}
+        </Button>
       </form>
     </article>
   );
